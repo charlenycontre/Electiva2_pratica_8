@@ -1,0 +1,42 @@
+---
+- name: Configurar servidores ITLA
+  hosts: servers
+  become: true
+  tasks:
+
+    - name: Actualizar paquetes del sistema
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Crear usuario itla
+      user:
+        name: itla
+        shell: /bin/bash
+        state: present
+
+    - name: Crear carpeta app
+      file:
+        path: /home/itla/app
+        state: directory
+        owner: itla
+        group: itla
+        mode: '0755'
+
+    - name: Crear archivo hola.txt
+      copy:
+        content: "Hola desde ITLA"
+        dest: /home/itla/app/hola.txt
+        owner: itla
+        group: itla
+        mode: '0644'
+
+    - name: Instalar cowsay
+      apt:
+        name: cowsay
+        state: present
+
+    - name: Instalar htop
+      apt:
+        name: htop
+        state: present
